@@ -4,11 +4,15 @@ import {
   useFetchRecipe,
   useAddWish,
   useDeleteWish,
+  fetchRecipe,
 } from "../../hooks/useFetchRecipe";
-import { useQueryClient } from "react-query";
+import { QueryClient, dehydrate, useQueryClient } from "react-query";
 import LoadingComponent from "../../components/loading/LoadingComponent";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { QUERY_KEY } from "../../utils/queryKeys";
+import { GetStaticPropsContext } from "next";
+import { ParsedUrlQuery } from "querystring";
 
 export default function DetailPage() {
   const router = useRouter();
@@ -77,6 +81,32 @@ export default function DetailPage() {
       </InfoWrapper>
     </Container>
   );
+}
+
+interface MyParams extends ParsedUrlQuery {
+  category: string;
+  id: string;
+}
+
+export async function getStaticProps({
+  params,
+}: GetStaticPropsContext<MyParams>) {
+  const queryClient = new QueryClient();
+  const page = 1;
+  if (params) {
+    const { category, id } = params;
+
+    await queryClient.prefetchQuery(
+      QUERY_KEY.getDetailRecipeKey(category, page),
+      async () => await fetchRecipe(category, id),
+    );
+  }
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
 }
 
 const IngredientTab = styled.div`

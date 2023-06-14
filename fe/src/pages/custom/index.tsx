@@ -1,11 +1,15 @@
 import styled from "styled-components";
 import { RecipesContainer } from "..";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import Card from "../../components/card/Card";
-import { getCustomCards } from "../../utils/query";
-import { useMainPagination } from "../../hooks/useMainPagination";
+import { RegularResponseData, getCustomCards } from "../../utils/query";
 import RecipePagination from "../../components/card/RecipePagination";
-import LoadingComponent from "../../components/loading/LoadingComponent";
+import { QueryClient, dehydrate, useQuery } from "react-query";
+import { QUERY_KEY, getFetchSize } from "../../utils/queryKeys";
+import { useState } from "react";
+import useMainRecipePagination from "../../hooks/useMainRecipePagination";
+import Image from "next/image";
+
 const CustomGuide = styled.div`
   display: flex;
 `;
@@ -40,34 +44,84 @@ const CardsRow = styled.div`
   place-items: center;
 `;
 
-export default function CustomRecipes() {
-  const path = "custom";
-  const { data, isLoading, isPreviousData, hasMore, onNextClick, onPrevClick } =
-    useMainPagination(path, getCustomCards);
+const NoneSearchedBox = styled.div`
+  width: 100%;
+  min-height: 70vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  line-height: 3rem;
+`;
 
-  return (
-    <RecipesContainer>
-      <CustomGuide>
-        <GuideText>커스텀 레시피</GuideText>
-        <RegistrationLink to={"/registration"}>
-          레시피 등록하기
-        </RegistrationLink>
-      </CustomGuide>
-      <CardsRow>
-        {isLoading && <LoadingComponent />}
-        {data?.data.map((recipe) => {
-          return <Card key={recipe.id} recipe={recipe} category="custom" />;
-        })}
-      </CardsRow>
-      {data?.pageInfo && data.pageInfo.totalPage > 1 && (
-        <RecipePagination
-          pageInfo={data?.pageInfo}
-          hasMore={!!hasMore}
-          isPreviousData={isPreviousData}
-          onNextClick={onNextClick}
-          onPrevClick={onPrevClick}
-        />
-      )}
-    </RecipesContainer>
+const PATH = "custom";
+
+export default function CustomRecipes() {
+  const [page, setPage] = useState(1);
+  const size = getFetchSize(PATH);
+  const { data } = useQuery<RegularResponseData>(
+    QUERY_KEY.getCustomCardsKey(PATH, size),
+    async () => await getCustomCards(PATH, page, size),
   );
+  if (data) {
+    const { hasMore, onNextClick, onPrevClick } = useMainRecipePagination(
+      data.pageInfo,
+      setPage,
+    );
+    if (!data.data) {
+      return (
+        <NoneSearchedBox>
+          <Image
+            src="/images/doNothaveRecipe.png"
+            width={400}
+            height={300}
+            alt={""}
+          />
+          <h1>레시피가 존재하지 않습니다.</h1>
+        </NoneSearchedBox>
+      );
+    }
+    return (
+      <RecipesContainer>
+        <CustomGuide>
+          <GuideText>커스텀 레시피</GuideText>
+          <RegistrationLink href="/registration">
+            레시피 등록하기
+          </RegistrationLink>
+        </CustomGuide>
+        <CardsRow>
+          {data?.data.map((recipe) => {
+            return <Card key={recipe.id} recipe={recipe} category="custom" />;
+          })}
+        </CardsRow>
+        {data?.pageInfo && data.pageInfo.totalPage > 1 && (
+          <RecipePagination
+            pageInfo={data.pageInfo}
+            hasMore={hasMore}
+            isPreviousData={data.pageInfo.totalPage > page}
+            onNextClick={onNextClick}
+            onPrevClick={onPrevClick}
+          />
+        )}
+      </RecipesContainer>
+    );
+  }
+}
+
+export async function getStaticProps() {
+  const queryClient = new QueryClient();
+  const size = getFetchSize(PATH);
+  const initPage = 1;
+
+  await queryClient.prefetchQuery(
+    QUERY_KEY.getCustomCardsKey(PATH),
+    async () => await getCustomCards(PATH, initPage, size),
+  );
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
 }

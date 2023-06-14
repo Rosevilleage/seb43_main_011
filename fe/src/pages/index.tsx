@@ -52,7 +52,7 @@ export async function getStaticProps() {
   await Promise.all(
     ALCOHOL_LEVEL_LIST.map((level) => {
       return queryClient.prefetchQuery(
-        QUERY_KEY.getCardsByAlcoholLevelKey(level, page),
+        QUERY_KEY.getCardsByAlcoholLevelKey(level),
         async () => await getCards(level, page),
       );
     }),

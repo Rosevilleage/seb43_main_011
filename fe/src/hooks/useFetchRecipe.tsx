@@ -15,7 +15,7 @@ export interface RecipeData {
   };
 }
 
-const fetchRecipe = async (category: string, id: string) => {
+export const fetchRecipe = async (category: string, id: string) => {
   const response = await tokenInstance.get(`/${category}/find/${id}`);
   return response.data;
 };

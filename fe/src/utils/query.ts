@@ -40,8 +40,8 @@ export interface CustomResponseData {
 
 export const getCustomCards = async (
   path: string,
-  size: number,
   page: number,
+  size: number,
 ) => {
   if (path === "bookmark") {
     const response: AxiosResponse<{ data: RegularResponseData }> =
