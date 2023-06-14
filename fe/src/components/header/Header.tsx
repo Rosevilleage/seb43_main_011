@@ -23,7 +23,8 @@ const Container = styled.header<{ isNavOpen: boolean }>`
 `;
 
 const ItemArea = styled.div`
-  width: 1360px;
+  width: 100%;
+  max-width: 1360px;
   height: 100%;
   display: flex;
   align-items: center;
