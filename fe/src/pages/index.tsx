@@ -36,8 +36,12 @@ export default function Main() {
       <RecipesContainer>
         <GuideText>정규 레시피</GuideText>
         {ALCOHOL_LEVEL_LIST.map((level) => (
-          <ErrorBoundary FallbackComponent={CardListFallback} onReset={reset}>
-            <CocktailListByAlcholLevel level={level} />
+          <ErrorBoundary
+            key={level}
+            FallbackComponent={CardListFallback}
+            onReset={reset}
+          >
+            <CocktailListByAlcholLevel key={level} level={level} />
           </ErrorBoundary>
         ))}
       </RecipesContainer>

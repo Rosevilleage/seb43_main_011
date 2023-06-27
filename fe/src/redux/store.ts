@@ -1,4 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
+import {
+  AnyAction,
+  CombinedState,
+  Store,
+  configureStore,
+} from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
 
 import NavOpen from "./slices/NavSlice";
@@ -17,6 +22,8 @@ export type DispatchType = typeof store.dispatch;
 
 export default store;
 
-export const wrapper = createWrapper<AppStore>(makeStore);
+export const wrapper = createWrapper<Store<RootState, AnyAction>>(makeStore, {
+  debug: process.env.NODE_ENV === "development",
+});
 
 export type AppStore = ReturnType<typeof makeStore>;

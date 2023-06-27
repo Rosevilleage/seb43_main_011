@@ -48,7 +48,8 @@ const Signup = () => {
   }
 
   const postUserData = async (userData: UserData) => {
-    const response = await axios.post("/signup", userData, {
+    const URL = process.env.NEXTAUTH_URL;
+    const response = await axios.post("/api/signup", userData, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -58,18 +59,24 @@ const Signup = () => {
 
   const mutation = useMutation(postUserData);
 
-  const handleSubmit = () => {
-    const userData = {
-      nickName: nickname,
-      email: email,
-      password: password,
-    };
+  const handleSubmit = async () => {
+    try {
+      const userData = {
+        nickName: nickname,
+        email: email,
+        password: password,
+      };
 
-    mutation.mutate(userData, {
-      onSuccess: () => {
-        router.push("/signin");
-      },
-    });
+      // mutation.mutate(userData, {
+      //   onSuccess: () => {
+      //     router.push("/signin");
+      //   },
+      // });
+      const res = await postUserData(userData);
+      console.log("res " + res);
+    } catch (err) {
+      console.log("err " + err);
+    }
   };
 
   const handleTogglePassword = () => {

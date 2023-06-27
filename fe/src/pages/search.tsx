@@ -1,5 +1,5 @@
 import { RecipesContainer } from ".";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 import SearchResultTab from "../components/card/SearchResultsTab";
 import styled from "styled-components";
 import { useEffect, useMemo, useState } from "react";
@@ -8,7 +8,7 @@ import RecipePagination from "../components/card/RecipePagination";
 import { useSearchedPagination } from "../hooks/useSearchedPagination";
 import LoadingComponent from "../components/loading/LoadingComponent";
 import { useQueryClient } from "react-query";
-import doNotHave from "../images/doNothaveRecipe.png";
+// import doNotHave from "../images/doNothaveRecipe.png";
 
 const CardListArea = styled.div`
   margin: 30px 0;

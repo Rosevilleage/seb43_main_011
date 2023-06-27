@@ -4,6 +4,14 @@ import { tokenInstance } from "./tokeninstance";
 axios.defaults.withCredentials = true;
 axios.defaults.headers["Content-Type"] = "application/json; charset=utf-8";
 
+export const getLoginState = () => {
+  const token =
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("accessToken")
+      : null;
+  return !!token;
+};
+
 export interface Recipes {
   [key: string]: RecipeCard[];
 }
@@ -30,7 +38,9 @@ export interface RegularResponseData {
 
 export const getCards = async (alcohol: string, page?: number, size = 5) => {
   const response: AxiosResponse<{ data: RegularResponseData }> =
-    await axios.get(`/regular/findAll/${alcohol}?page=${page}&size=${size}`);
+    await axios.get(
+      `/data/regular/findAll/${alcohol}?page=${page}&size=${size}`,
+    );
   return response.data.data;
 };
 

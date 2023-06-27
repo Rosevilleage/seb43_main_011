@@ -4,12 +4,10 @@ export const QUERY_KEY = {
     page,
     size,
   ],
-  getDetailRecipeKey: (category: string, page = 1, size = 5) => [
-    "recipe",
-    category,
-    page,
-    size,
-  ],
+  getDetailRecipeKey: (
+    category: string | string[] | undefined,
+    id: string | string[] | undefined,
+  ) => ["recipe", category, id],
   getCustomCardsKey: (category: string, page = 1, size = 20) => [
     category,
     page,

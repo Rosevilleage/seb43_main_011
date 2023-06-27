@@ -8,10 +8,13 @@ import { tokenInstance } from "../utils/tokeninstance";
 import IsNotLogin from "../components/errorFallback/IsNotLogin";
 import { useDeleteRecipe } from "../hooks/useDeleteRecipe";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 const CocktailRegistration = () => {
   const router = useRouter();
-  const isLogin = sessionStorage.getItem("UTK") !== null;
+  // const isLogin = sessionStorage.getItem("UTK") !== null;
+  const { status } = useSession();
+  const isLogin = status === "authenticated";
   const [isHovered, setIsHovered] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");

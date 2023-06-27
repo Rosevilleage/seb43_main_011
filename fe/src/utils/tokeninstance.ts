@@ -11,6 +11,8 @@ export const tokenInstance = axios.create({
 
 tokenInstance.interceptors.request.use(function (config) {
   const token = sessionStorage.getItem("UTK");
+  // const session = useSession
+  // const token =
   if (token) {
     config.headers.Authorization = token;
   } else {
