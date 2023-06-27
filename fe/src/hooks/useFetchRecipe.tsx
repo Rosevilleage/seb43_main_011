@@ -15,7 +15,10 @@ export interface RecipeData {
   };
 }
 
-export const fetchRecipe = async (category: string, id: string) => {
+export const fetchRecipe = async (
+  category: string | string[] | undefined,
+  id: string | string[] | undefined,
+) => {
   const response = await tokenInstance.get(`/${category}/find/${id}`);
   return response.data;
 };
