@@ -7,9 +7,10 @@ import LoadingComponent from "../loading/LoadingComponent";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { RiEdit2Line } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+
 import { GoGear, GoCheck } from "react-icons/go";
 import { useDeleteRecipe } from "../../hooks/useDeleteRecipe";
+import { useRouter } from "next/router";
 
 export const MyRecipesContainer = styled.div`
   width: 1300px;
@@ -143,8 +144,8 @@ const RecipeEdit = styled(RiEdit2Line)`
 
 export default function MyRecipes() {
   const [isEdit, setIsEdit] = useState(false);
-  const navigate = useNavigate();
-  const { data, isLoading, isPreviousData, hasMore, onNextClick, onPrevClick } =
+  const router = useRouter();
+  const { data, isPreviousData, hasMore, onNextClick, onPrevClick } =
     useMainPagination("myRecipe", getMyRecipe);
 
   const [deleteQueue, setDeleteQueue] = useState<number[]>([]);
@@ -182,7 +183,6 @@ export default function MyRecipes() {
         </FormChangeButton>
       </ButtonArea>
       <CardContainer>
-        {isLoading && <LoadingComponent />}
         {data?.data.map((recipe) => (
           <CardWrapper key={recipe.id}>
             <CardMover isEdit={isEdit}>
@@ -197,7 +197,7 @@ export default function MyRecipes() {
             <EditSpace isEdit={isEdit}>
               <RecipeDelete onClick={() => addToDeleteQueue(recipe.id)} />
               <RecipeEdit
-                onClick={() => navigate(`/custom/edit/${recipe.id}`)}
+                onClick={() => router.push(`/custom/edit/${recipe.id}`)}
               />
             </EditSpace>
           </CardWrapper>

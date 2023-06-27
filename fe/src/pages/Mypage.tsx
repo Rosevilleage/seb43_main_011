@@ -9,6 +9,7 @@ import { tokenInstance } from "../utils/tokeninstance";
 import MyRecipes from "../components/myPage/MyRecipes";
 import IsNotLogin from "../components/errorFallback/IsNotLogin";
 import MyWishList from "../components/myPage/MyWishList";
+import { useSession } from "next-auth/react";
 
 const Container = styled.div`
   display: flex;
@@ -29,7 +30,8 @@ export interface MyInfoData {
 export default function Mypage() {
   const [page, setPage] = useState("myInfo");
   const [isUserEdit, setIsUserEdit] = useState(false);
-  const isNotLogin = sessionStorage.getItem("UTK") === null;
+  const { status } = useSession();
+  const isNotLogin = status === "unauthenticated";
   const ToggleMyInfo = () => {
     setIsUserEdit((edit) => !edit);
   };

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { MyInfoData } from "../../pages/mypage";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 const Container = styled.div`
   display: flex;
@@ -92,7 +92,7 @@ export default function MyInfo({
   isError,
   ToggleEditHandle,
 }: MyInterfaceInfo) {
-  const navigate = useNavigate();
+  const router = useRouter();
   if (isLoading) {
     return <p>로딩중입니다...</p>;
   }
@@ -120,7 +120,7 @@ export default function MyInfo({
           <Button
             onClick={() => {
               sessionStorage.removeItem("UTK");
-              navigate("/");
+              router.push("/");
             }}
             red={true}
           >

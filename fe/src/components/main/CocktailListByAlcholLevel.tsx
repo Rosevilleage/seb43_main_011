@@ -77,8 +77,8 @@ export default function CocktailListByAlcholLevel({
         <CardsRow>
           {data?.data.map((recipe, i) => {
             return (
-              <Suspense fallback={<CocktailLiustLoading />}>
-                <Card recipe={recipe} key={i} category="regular" />
+              <Suspense key={recipe.id} fallback={<CocktailLiustLoading />}>
+                <Card recipe={recipe} key={recipe.id} category="regular" />
               </Suspense>
             );
           })}

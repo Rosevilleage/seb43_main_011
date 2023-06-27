@@ -3,9 +3,10 @@ import { HiMagnifyingGlass } from "react-icons/hi2";
 import { useAppSelector } from "../../redux/hooks";
 import Link from "next/link";
 import NavController from "./NavController";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { signIn, useSession } from "next-auth/react";
 
 const Container = styled.header<{ isNavOpen: boolean }>`
   height: 85px;
@@ -91,19 +92,30 @@ const MenuItem = styled(Link)`
   }
 `;
 
+const LoginBtn = styled.button`
+  color: #5a5a5a;
+  background-color: #ffff;
+  width: max-content;
+  font-weight: bold;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-right: 10px;
+  text-decoration: none;
+  border: none;
+  &:hover {
+    cursor: pointer;
+    background-color: #8092f6;
+    color: #ffff;
+  }
+`;
+
 const Header = () => {
   const router = useRouter();
   const isNavOpen = useAppSelector((state) => state.NavOpen.value);
   const [searchText, setSearchText] = useState("");
   const [isFocus, setIsFocus] = useState(false);
-  let isLogin = false;
-  const token =
-    typeof window !== "undefined"
-      ? sessionStorage.getItem("accessToken")
-      : null;
-  if (token) {
-    isLogin = true;
-  }
+  const { status } = useSession();
+  const isLogin = status === "authenticated";
 
   const searchOnChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSearchText(e.target.value);
@@ -115,7 +127,7 @@ const Header = () => {
     }
   };
 
-  const endPoind = isLogin ? "/myPage" : "/signin";
+  const endPoind = isLogin ? "/mypage" : "/signin";
 
   return (
     <Container isNavOpen={isNavOpen}>
@@ -141,7 +153,7 @@ const Header = () => {
         <Menu>
           {!isLogin && (
             <>
-              <MenuItem href={endPoind}>로그인</MenuItem>
+              <LoginBtn onClick={() => signIn()}>로그인</LoginBtn>
               <MenuItem href={"/signup"}>회원가입</MenuItem>
             </>
           )}
