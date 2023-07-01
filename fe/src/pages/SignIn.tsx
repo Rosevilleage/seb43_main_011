@@ -2,11 +2,11 @@ import styled from "styled-components";
 import { useState } from "react";
 import GooogleSignInButton from "../components/loginbutton/GoogleSignIn";
 import SignInInputForm from "../components/signIn/SignInForm";
-import { useMutation } from "react-query";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { useAppDispatch } from "../redux/hooks";
+import { createNoSubstitutionTemplateLiteral } from "typescript";
 
 interface UserData {
   email: string;
@@ -17,17 +17,21 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-
+  const dispatch = useAppDispatch();
   //눌렀을때 서버로 전송하는 함수
   const handlelogin = async (/*보내는데이터 타입*/) => {
     //post 요청으로 데이터보내기 axios
 
-    const response = await signIn("email-credential", {
-      email,
-      password,
-      redirect: false,
-    });
-    if (response) {
+    // const response = await signIn("email-credential", {
+    //   email,
+    //   password,
+    //   redirect: false,
+    // });
+    const response = await axios.post("/api/signin", { email, password });
+    if (response && typeof window !== "undefined") {
+      const token = response.data;
+
+      sessionStorage.setItem("UTK", token);
       router.push("/");
     } else {
       window.alert("이메일 혹은 비밀번호가 일치하지 않습니다");
