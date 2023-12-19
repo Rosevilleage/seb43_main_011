@@ -136,11 +136,9 @@ const CocktailEdit = () => {
   }
   const postCustomRecipe = async (data: NewRecipe) => {
     try {
-      const content = JSON.stringify(data);
-
       const response = await tokenInstance.patch(
         `/custom/update/content/${id}`,
-        content,
+        data,
       );
 
       return response.data;

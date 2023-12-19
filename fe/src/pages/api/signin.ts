@@ -17,7 +17,6 @@ export default async function signup(
       res.status(result.status).json(token);
     }
   } catch (error) {
-    console.log(error);
     res.json({ error: error });
   }
 }

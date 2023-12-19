@@ -55,11 +55,13 @@ export const getCustomCards = async (
 ) => {
   if (path === "bookmark") {
     const response: AxiosResponse<{ data: RegularResponseData }> =
-      await tokenInstance.get(`/${path}/findAll?page=${page}&size=${size}`);
+      await tokenInstance.get(
+        `/data/${path}/findAll?page=${page}&size=${size}`,
+      );
     return response.data.data;
   } else {
     const response: AxiosResponse<{ data: RegularResponseData }> =
-      await axios.get(`/${path}/findAll?page=${page}&size=${size}`);
+      await axios.get(`/data/${path}/findAll?page=${page}&size=${size}`);
     return response.data.data;
   }
 };

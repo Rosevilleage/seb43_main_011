@@ -4,17 +4,19 @@ import { TiDelete } from "react-icons/ti";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
 import ImageUpload from "../components/imageupload/ImageUpload";
-import { tokenInstance } from "../utils/tokeninstance";
 import IsNotLogin from "../components/errorFallback/IsNotLogin";
 import { useDeleteRecipe } from "../hooks/useDeleteRecipe";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
+
+import axios from "axios";
+import useIsLogin from "../hooks/useIsLogin";
 
 const CocktailRegistration = () => {
   const router = useRouter();
   // const isLogin = sessionStorage.getItem("UTK") !== null;
-  const { status } = useSession();
-  const isLogin = status === "authenticated";
+  // const { status } = useSession();
+  // const isLogin = status === "authenticated";
+  const isLogin = useIsLogin();
   const [isHovered, setIsHovered] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -42,12 +44,9 @@ const CocktailRegistration = () => {
   }
 
   const postCustomRecipe = async (data: NewRecipe) => {
-    const content = JSON.stringify(data);
-    const response = await tokenInstance.post(
-      "/custom/submit/content",
-      content,
-    );
-    return response.data.data.recipeId;
+    const response = await axios.post("/api/registration/contents", data);
+
+    return response.data;
   };
 
   interface NewImage {
@@ -55,8 +54,8 @@ const CocktailRegistration = () => {
     formData: FormData;
   }
   const postCustomImage = async (data: NewImage) => {
-    const response = await tokenInstance.post(
-      `/custom/submit/image/${data.id}`,
+    const response = await axios.post(
+      `/api/registration/image/${data.id}`,
       data.formData,
       { headers: { "Content-Type": "multipart/form-data" } },
     );
@@ -102,6 +101,14 @@ const CocktailRegistration = () => {
     }
   };
 
+  const handleSubmitTest = async () => {
+    const id = 5;
+    const data = new FormData();
+    axios.post(`/api/check/${id}`, data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  };
+
   const handleSubmitData = async () => {
     const totalData = selectLines
       .map((line, i) => {
@@ -140,19 +147,19 @@ const CocktailRegistration = () => {
             };
             imageMutation.mutate(input, {
               onSuccess: () => {
-                router.push("/custom");
+                // router.push("/custom");
               },
               onError: () => {
                 window.alert("이미지 등록실패, 이미지의 크기가 너무 큽니다");
-                deleteMutation.mutateAsync(data);
-                setName("");
-                setDescription("");
-                setRecipeStep("");
-                setSelectedImage(undefined);
-                setSelectLineId(-1);
-                setSelectLines([
-                  { id: 0, stuff: "", amount: "", selectOption: "ml" },
-                ]);
+                // deleteMutation.mutateAsync(data);
+                // setName("");
+                // setDescription("");
+                // setRecipeStep("");
+                // setSelectedImage(undefined);
+                // setSelectLineId(-1);
+                // setSelectLines([
+                //   { id: 0, stuff: "", amount: "", selectOption: "ml" },
+                // ]);
               },
             });
           }

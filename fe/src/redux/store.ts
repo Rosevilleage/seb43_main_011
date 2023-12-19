@@ -7,10 +7,12 @@ import {
 import { createWrapper } from "next-redux-wrapper";
 
 import NavOpen from "./slices/NavSlice";
+import UserSlice from "./slices/UserSlice";
 
 const makeStore = () =>
   configureStore({
     reducer: {
+      User: UserSlice,
       NavOpen: NavOpen,
     },
   });

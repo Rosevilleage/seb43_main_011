@@ -73,7 +73,6 @@ const Signup = () => {
       //   },
       // });
       const res = await postUserData(userData);
-      console.log("res " + res);
     } catch (err) {
       console.log("err " + err);
     }

@@ -9,12 +9,17 @@ import { ThemeProvider } from "styled-components";
 import GlobalStyle from "../components/style/GlobalStyles";
 import { Suspense } from "react";
 import LoadingComponent from "../components/loading/LoadingComponent";
-import { SessionProvider } from "next-auth/react";
-function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+import axios from "axios";
+
+function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
+  if (typeof window !== "undefined") {
+    const token = sessionStorage.getItem("UTK");
+    if (token) axios.defaults.headers.common["Authorization"] = token;
+  }
 
   return (
-    <SessionProvider session={session}>
+    <>
       <Head>
         <title>알딸딸</title>
         <link rel="icon" href="/cocktail3.ico" />
@@ -35,7 +40,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           </Hydrate>
         </QueryClientProvider>
       </ThemeProvider>
-    </SessionProvider>
+    </>
   );
 }
 

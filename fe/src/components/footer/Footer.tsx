@@ -8,7 +8,8 @@ const Footer = () => {
         <Info>
           <Description>made by tippler</Description>
           <Description>
-            Copyright©2023 SideQuest.All rights reserved.
+            Copyright © 2023 알딸딸{" "}
+            <a href="https://opensource.org/license/mit/">MIT</a>
           </Description>
         </Info>
         <Logo>
