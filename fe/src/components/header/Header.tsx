@@ -6,7 +6,7 @@ import NavController from "./NavController";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { signIn, useSession } from "next-auth/react";
+import useIsLogin from "../../hooks/useIsLogin";
 
 const Container = styled.header<{ isNavOpen: boolean }>`
   height: 85px;
@@ -114,8 +114,11 @@ const Header = () => {
   const isNavOpen = useAppSelector((state) => state.NavOpen.value);
   const [searchText, setSearchText] = useState("");
   const [isFocus, setIsFocus] = useState(false);
-  const { status } = useSession();
-  const isLogin = status === "authenticated";
+  // const { status } = useSession();
+  // const isLogin = status === "authenticated";
+  // const isLogin = useAppSelector((state) => state.User.isAuthenticated);
+
+  const isLogin = useIsLogin();
 
   const searchOnChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSearchText(e.target.value);
@@ -153,7 +156,7 @@ const Header = () => {
         <Menu>
           {!isLogin && (
             <>
-              <LoginBtn onClick={() => signIn()}>로그인</LoginBtn>
+              <MenuItem href={"/signin"}>로그인</MenuItem>
               <MenuItem href={"/signup"}>회원가입</MenuItem>
             </>
           )}

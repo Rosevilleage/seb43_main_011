@@ -23,7 +23,7 @@
   },
   "include": [
     "src"
-  ],
+, "template/auth"  ],
   "exclude": [
     "node_modules"
   ]
